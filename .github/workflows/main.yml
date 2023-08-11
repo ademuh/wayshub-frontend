@@ -18,7 +18,7 @@ jobs:
         key: ${{ secrets.PRIVKEY }}
         port: 22
         script: |
-        cd ~/
-        docker compose down
-        docker compose build
-        docker compose up -d
+         cd ~/
+         docker compose down
+         docker compose build
+         docker compose up -d

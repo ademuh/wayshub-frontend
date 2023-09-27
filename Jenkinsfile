@@ -1,34 +1,42 @@
-def cred = 'appserver'
-def server = 'ads@103.30.195.56'
-def dir = '~/wayshub-frontend'
-def branch = 'main'
-//def image = 'aimingds/wayshub-be:latest'
+def dir = "~/wayshub-frontend"
+def cred = "appserver"
+def server = "aimingds@103.127.97.24"
 
 pipeline{
-    agent any
-    stages{
-        stage('docker-compose down & pull repository'){
-            steps{
-                sshagent([cred]){
-                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd ${dir}
-                    docker-compose down
-                    git pull origin ${branch}
-                    exit
-                    EOF"""
-                    }
+	agent any
+	stages{
+		stage("docker compose down & pulling repo"){
+			steps{
+				sshagent([cred]){
+				sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+				cd ~
+				docker compose down
+				cd ${dir}
+				git pull origin main
+				exit
+				EOF"""
+				}
+			}
+		}
+		stage("building docker image"){
+                        steps{
+                                sshagent([cred]){
+                                sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+				cd ${dir}
+				docker build -t wayshub-fe .
+                                EOF"""
+                                }
+                        }
                 }
-            }
-        stage('Starting app'){
-            steps{
-                sshagent([cred]){
-                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd ${dir}
-                    docker-compose up -d
-                    exit
-                    EOF"""
-                    }
+		stage("docker compose up"){
+                        steps{
+                                sshagent([cred]){
+                                sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+				cd ~
+				docker compose up -d
+                                EOF"""
+                                }
+                        }
                 }
-            }
-        }
-    }
+	}
+}

@@ -24,7 +24,8 @@ pipeline{
                                 sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
 				cd ${dir}
 				docker build -t wayshub-fe .
-                                EOF"""
+                                exit
+				EOF"""
                                 }
                         }
                 }
@@ -34,7 +35,8 @@ pipeline{
                                 sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
 				cd ~
 				docker compose up -d
-                                EOF"""
+                                exit
+				EOF"""
                                 }
                         }
                 }

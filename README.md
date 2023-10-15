@@ -1,1 +1,1 @@
-asede konci sama lo semua
+kontol hahahahhaha
